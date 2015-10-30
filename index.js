@@ -1,7 +1,9 @@
 "use strict"
 
 // Get the tools we need.
+const os = require("os")
 const s3 = require("s3")
+const fs = require("fs")
 
 class Multicolour_S3_Storage {
 
@@ -31,7 +33,7 @@ class Multicolour_S3_Storage {
    */
   login(credentials) {
     // Update the credentials.
-    this.options.s3Options = credentials
+    require("util")._extend(this.options.s3Options, credentials)
 
     // Create the client.
     this._client = s3.createClient(this.options)
@@ -44,6 +46,19 @@ class Multicolour_S3_Storage {
   }
 
   /**
+   * There's no real log out method on the
+   * AWS SDK but we can remove reference to
+   * the client and set logged_in to false.
+   * @return {Multicolour_S3_Storage} Object for chaining.
+   */
+  logout() {
+    this._client = null
+    this.logged_in = false
+
+    return this
+  }
+
+  /**
    * Upload a file to an S3 bucket and return
    * an EventEmitter to listen for data events.
    * @param  {multicolour/File} file to upload to S3.
@@ -51,14 +66,31 @@ class Multicolour_S3_Storage {
    * @return {EventEmitter} object to listen for event
    */
   upload(file, destination) {
+    // Check if we're logged in.
+    if (!this.logged_in) {
+      this.login(this.options.s3Options)
+    }
+
     // Check we got a destination.
-    if (!destination.hasOwnProperty("bucket") || !destination.hasOwnProperty("name")) {
+    if (!destination || !destination.hasOwnProperty("bucket") || !destination.hasOwnProperty("name")) {
       throw new ReferenceError("destination must have bucket and name keys.")
     }
     // Upload the file.
     else {
-      return this._client.uploadFile({
-        localFile: file.path,
+      if (file.hasOwnProperty("pipe")) {
+        const file_name = `${os.tempdir()}/${Math.random()}`
+        return file.pipe(file_name).on("end", () => {
+          return this._client.uploadFile({
+            localFile: file_name,
+            s3Params: {
+              Bucket: destination.bucket,
+              Key: destination.name
+            }
+          })
+        })
+      }
+      else return this._client.uploadFile({
+        localFile: file,
         s3Params: {
           Bucket: destination.bucket,
           Key: destination.name
@@ -68,21 +100,12 @@ class Multicolour_S3_Storage {
   }
 
   /**
-   * Download a file from an S3 bucket and return
-   * an EventEmitter to listen for data events.
-   * @param  {multicolour/File} file to upload to S3.
-   * @param  {Object} destination object with bucket and name keys.
-   * @return {EventEmitter} object to listen for event
+   * Get the URL to an asset on the server.
+   * @param  {multicolour/File} s3_file to get a url for.
+   * @return {String}
    */
-  get(s3_file, destination) {
-    return this._client.downloadFile({
-      localFile: destination,
-
-      s3Params: {
-        Bucket: s3_file.bucket,
-        Key: s3_file.name
-      }
-    })
+  get(bucket, key) {
+    return s3.getPublicUrl(bucket, key)
   }
 }
 

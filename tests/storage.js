@@ -32,7 +32,6 @@ tape("Waterline S3 storage adapter init.", test => {
   test.notEqual(typeof storage_instance, "undefined", "Storage is set after registering storage plugin.")
   test.throws(() => storage_instance.upload(test_file), ReferenceError, "Upload without destination throws.")
   test.throws(() => storage_instance.upload(test_file, {bucket: ""}), ReferenceError, "Upload without destination.name throws.")
-  console.log(storage_instance.get("context-captures", "circle.svg"))
   test.ok(storage_instance.get("context-captures", "circle.svg"), "Gets the url to something in a bucket.")
 
   test.doesNotThrow(() => storage_instance.logout(), "Does not error when logging out.")

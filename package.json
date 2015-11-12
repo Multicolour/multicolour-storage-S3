@@ -29,9 +29,7 @@
     "tape": "^4.2.0"
   },
   "dependencies": {
-    "s3": "^4.4.0"
-  },
-  "peerDependencies": {
+    "s3": "^4.4.0",
     "multicolour": "^0.1.0"
   }
 }

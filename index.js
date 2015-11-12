@@ -3,14 +3,17 @@
 // Get the tools we need.
 const os = require("os")
 const s3 = require("s3")
+const Plugin = require("multicolour/lib/plugin")
 
-class Multicolour_S3_Storage {
+class Multicolour_S3_Storage extends Plugin {
 
   /**
    * Create default options and values.
    * @return {Multicolour_S3_Storage} Object for chaining.
    */
   constructor() {
+    super()
+
     this.logged_in = false
 
     // Set up the default options.
@@ -27,6 +30,15 @@ class Multicolour_S3_Storage {
     this.target_bucket = ""
 
     return this
+  }
+
+  /**
+   * Set the storage name on our host.
+   * @param  {Multicolour} multicolour host instance.
+   * @return {void}
+   */
+  register(multicolour) {
+    multicolour.reply("storage", this)
   }
 
   /**
@@ -169,11 +181,5 @@ class Multicolour_S3_Storage {
   }
 }
 
-// Export the required config for Multicolour to register.
-module.exports = {
-  // It's a server generator, use that type.
-  type: require("multicolour/lib/consts").STORAGE_PLUGIN,
-
-  // The generator is the class above.
-  generator: Multicolour_S3_Storage
-}
+// Export Multicolour_S3_Storage for Multicolour to register.
+module.exports = Multicolour_S3_Storage

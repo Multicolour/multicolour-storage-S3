@@ -97,39 +97,38 @@ class Multicolour_S3_Storage extends Plugin {
     }
 
     // Check we have a destination.
-    if (
-      (!destination && !this.target_bucket) ||
+    if ((!destination && !this.target_bucket) ||
       (!destination.hasOwnProperty("bucket") && !this.target_bucket) ||
-      !destination.hasOwnProperty("name")
-    ) {
+      !destination.hasOwnProperty("name")) {
       throw new ReferenceError("destination must have bucket and name keys.")
     }
-    // Upload the file.
-    else {
-      if (file.pipe) {
-        // Write it to the temp dir.
-        const file_name = `${os.tmpdir()}/${Math.random()}`
 
-        // Do the write then upload.
-        return file.pipe(file_name).on("end", () => {
-          return this._client.uploadFile({
-            localFile: file_name,
-            s3Params: {
-              Bucket: destination.bucket || this.target_bucket,
-              Key: destination.name
-            }
-          })
-        })
-      }
-      else {
+    // Upload the file.
+    if (file.pipe) {
+      // Write it to the temp dir.
+      const file_name = `${os.tmpdir()}/${Math.random()}`
+
+      // Do the write then upload.
+      return file.pipe(file_name).on("end", () => {
         return this._client.uploadFile({
-          localFile: file,
+          localFile: file_name,
           s3Params: {
             Bucket: destination.bucket || this.target_bucket,
             Key: destination.name
           }
+        }).on("error", err => {
+          throw err
         })
-      }
+      })
+    }
+    else {
+      return this._client.uploadFile({
+        localFile: file,
+        s3Params: {
+          Bucket: destination.bucket || this.target_bucket,
+          Key: destination.name
+        }
+      })
     }
   }
 

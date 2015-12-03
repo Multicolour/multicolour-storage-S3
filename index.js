@@ -38,7 +38,9 @@ class Multicolour_S3_Storage extends Plugin {
    * @return {void}
    */
   register(multicolour) {
-    multicolour.reply("storage", this)
+    multicolour
+      .reply("storage", this)
+      .reply("storage_config_keys", [ "bucket" ])
   }
 
   /**

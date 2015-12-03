@@ -1,6 +1,6 @@
 {
   "name": "multicolour-storage-s3",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Amazon S3 storage for media plugin for Multicolour",
   "main": "index.js",
   "scripts": {

@@ -1,4 +1,6 @@
 # multicolour-storage-S3
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/Multicolour/multicolour-storage-S3.svg)](https://greenkeeper.io/)
 [![Build Status](https://travis-ci.org/newworldcode/multicolour-storage-S3.svg)](https://travis-ci.org/newworldcode/multicolour-storage-S3)
 [![Coverage Status](https://coveralls.io/repos/newworldcode/multicolour-storage-S3/badge.svg?branch=master&service=github)](https://coveralls.io/github/newworldcode/multicolour-storage-S3?branch=master)
 [![bitHound Score](https://www.bithound.io/github/newworldcode/multicolour-storage-S3/badges/score.svg)](https://www.bithound.io/github/newworldcode/multicolour-storage-S3)

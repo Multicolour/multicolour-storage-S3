@@ -23,13 +23,13 @@
   },
   "homepage": "https://github.com/davemackintosh/multicolour-storage-S3#readme",
   "devDependencies": {
-    "eslint": "^1.5.1",
-    "istanbul": "^0.3.22",
+    "eslint": "^3.19.0",
+    "istanbul": "^0.4.5",
     "tap-spec": "^4.1.0",
     "tape": "^4.2.0"
   },
   "dependencies": {
     "s3": "^4.4.0",
-    "multicolour": "^0.1.0"
+    "multicolour": "^0.6.8"
   }
 }

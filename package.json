@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "tape tests/*.js | tap-spec",
-    "test-coverage": "istanbul cover tape tests/*.js --recursive --report lcov html -x cli.js | tap-spec"
+    "test-coverage": "istanbul cover tape tests/*.js --recursive --report lcov html -x cli.js | tap-spec",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -30,6 +32,8 @@
   },
   "dependencies": {
     "s3": "^4.4.0",
-    "multicolour": "^0.1.0"
-  }
+    "multicolour": "^0.1.0",
+    "snyk": "^1.85.0"
+  },
+  "snyk": true
 }
